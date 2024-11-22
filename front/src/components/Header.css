@@ -1,0 +1,36 @@
+.header {
+    background-color: #345fa0;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .title {
+    color: #fff;
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+  }
+  
+  .nav {
+    display: flex;
+  }
+  
+  .Link {
+    color: #fff;
+    text-decoration: none;
+    margin-left: 20px;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: color 0.3s ease;
+  }
+  
+  .Link:hover {
+    color: #f0f0f0;
+  }
+  
+  .Link:focus {
+    outline: none;
+  }
+  
