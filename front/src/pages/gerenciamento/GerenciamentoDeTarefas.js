@@ -9,9 +9,9 @@ const GerenciamentoDeTarefas = () => {
     const [usuarios, setUsuarios] = useState([]);  // Lista de usuários
     const [tasks, setTasks] = useState([]);  // Lista de tarefas
     const [statusOptions] = useState([
-        { value: 'a_fazer', label: 'A Fazer' },
-        { value: 'fazendo', label: 'Fazendo' },
-        { value: 'pronto', label: 'Pronto' }
+        { value: 'AFAZER', label: 'A Fazer' },
+        { value: 'FAZENDO', label: 'Fazendo' },
+        { value: 'PRONTO', label: 'Pronto' }
     ]);
 
     // Função para buscar os usuários
@@ -55,8 +55,8 @@ const GerenciamentoDeTarefas = () => {
         console.log("Novo Status:", newStatus);
 
         // Encontre a tarefa que será atualizada
-        const taskToUpdate = tasks.find(task => task.id === idTask);
-        console.log("id do update:", taskToUpdate);
+        const taskToUpdate = tasks.find(task => task.idTask === idTask);
+        console.log("Tarefa para atualizar:", taskToUpdate);
 
         if (!taskToUpdate) {
             console.error("Tarefa não encontrada!");
@@ -64,18 +64,19 @@ const GerenciamentoDeTarefas = () => {
         }
 
         try {
-            // Enviar o objeto completo com o novo status
             const updatedTask = {
-                ...taskToUpdate, // Copia todos os campos da tarefa
-                status: newStatus, // Atualiza apenas o status
+                ...taskToUpdate,
+                status: newStatus, // Atualiza o status
             };
 
-            await axios.patch(`http://127.0.0.1:8081/tasks/${idTask}`, updatedTask);
+            console.log("Atualizando tarefa:", updatedTask);
+
+            await axios.patch(`http://127.0.0.1:8081/task/${idTask}`, updatedTask);
 
             // Atualiza a lista localmente
             setTasks(prevTasks =>
                 prevTasks.map(task =>
-                    task.id === idTask ? updatedTask : task
+                    task.idTask === idTask ? updatedTask : task
                 )
             );
 
@@ -86,11 +87,12 @@ const GerenciamentoDeTarefas = () => {
         }
     };
 
+
     // Função para excluir a tarefa
     const handleDeleteTask = async (idTask) => {
         try {
             await axios.delete(`http://127.0.0.1:8081/task/deletar/${idTask}`);
-            setTasks(prevTasks => prevTasks.filter(task => task.id !== idTask));
+            setTasks(prevTasks => prevTasks.filter(task => task.idTask !== idTask));
             alert("Tarefa excluída com sucesso!");
         } catch (error) {
             console.error("Erro ao excluir a tarefa:", error);
@@ -119,7 +121,7 @@ const GerenciamentoDeTarefas = () => {
                             Editar
                         </button>
                         <button
-                            onClick={() => handleDeleteTask(task.id)} // Exclui a tarefa
+                            onClick={() => handleDeleteTask(task.idTask)} // Exclui a tarefa
                             style={styles.deleteButton}
                         >
                             Excluir
@@ -147,7 +149,7 @@ const GerenciamentoDeTarefas = () => {
                             </select>
 
                             <button
-                                onClick={() => handleStatusChange(task.id, task.status)} // Usa o status da tarefa
+                                onClick={() => handleStatusChange(task.idTask, task.status)} // Usa o status da tarefa
                                 style={styles.updateButton}
                             >
                                 Alterar status
