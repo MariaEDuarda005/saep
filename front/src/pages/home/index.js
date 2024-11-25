@@ -32,8 +32,9 @@ function Home() {
       <Header/>
       <main>
         <h2>Cadastro de Usuários</h2>
-        <form onSubmit={handleSubmit}>
-          <div className='teste' style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+        <form className="formulario"
+        onSubmit={handleSubmit}>
+          <div className='teste' style={{ display: 'flex', alignItems: 'center', marginBottom: '25px', marginTop: '25px' }}>
             <label htmlFor="nome" style={{ flex: '1', marginRight: '10px' }}>Nome:</label>
             <input
               type="text"
@@ -41,7 +42,7 @@ function Home() {
               value={nome}
               onChange={(e) => setNome(e.target.value)}
               required
-              style={{ flex: '2', height: '5px', padding: 10, borderRadius: '7px' }}
+              style={{ flex: '2', height: '10px', padding: 15, borderRadius: '7px' }}
             />
           </div>
           <div className='teste' style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
@@ -52,7 +53,7 @@ function Home() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              style={{ flex: '2', height: '5px', padding: 10, borderRadius: '7px' }}
+              style={{ flex: '2', height: '5px', padding: 12, borderRadius: '7px' }}
             />
           </div>
           <div style={{ display: 'flex', justifyContent: 'center' }}>

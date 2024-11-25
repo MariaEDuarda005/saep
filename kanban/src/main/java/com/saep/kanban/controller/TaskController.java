@@ -30,25 +30,23 @@ public class TaskController {
         return "Hello world";
     }
 
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping("/{idTask}")
     public ResponseEntity<TaskDetailsDTO> getTaskById(@PathVariable Long idTask) {
         try {
             TaskDetailsDTO taskDetails = taskServiceImpl.getById(idTask);
+            System.out.println(idTask);
             return new ResponseEntity<>(taskDetails, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
 
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping
     public ResponseEntity<List<TaskDetailsDTO>> getAllTasks() {
         List<TaskDetailsDTO> tasks = taskServiceImpl.getAllTask();
         return new ResponseEntity<>(tasks, HttpStatus.OK);
     }
 
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping("/status/{status}")
     public ResponseEntity<List<TaskDetailsDTO>> getTasksByStatus(@PathVariable String status) {
         try {
@@ -60,7 +58,6 @@ public class TaskController {
     }
 
     // Buscar tarefas por prioridade
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping("/prioridade/{prioridade}")
     public ResponseEntity<List<TaskDetailsDTO>> getTasksByPrioridade(@PathVariable String prioridade) {
         try {
@@ -71,7 +68,6 @@ public class TaskController {
         }
     }
 
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping("/cadastrar")
     @Transactional
     public ResponseEntity<TaskDetailsDTO> createTask(@RequestBody TaskCreateDTO taskCreateDTO, UriComponentsBuilder uriComponentsBuilder) {
@@ -80,7 +76,6 @@ public class TaskController {
         return ResponseEntity.created(uri).body(task);
     }
 
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PatchMapping("/{idTask}")
     @Transactional
     public ResponseEntity<TaskDetailsDTO> patchTask(@PathVariable Long idTask, @RequestBody TaskPatchDTO patchDTO){
@@ -88,7 +83,6 @@ public class TaskController {
         return ResponseEntity.ok(patchTask);
     }
 
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PutMapping("/{idTask}")
     @Transactional
     public ResponseEntity<TaskDetailsDTO> updateTask(@PathVariable Long idTask, @RequestBody TaskUpdateDTO updateDTO){
@@ -96,7 +90,6 @@ public class TaskController {
         return ResponseEntity.ok(updateTask);
     }
 
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @DeleteMapping("/deletar/{idTask}")
     public ResponseEntity<Void> deleteTasks(@PathVariable Long idTask){
         taskServiceImpl.deleteTask(idTask);

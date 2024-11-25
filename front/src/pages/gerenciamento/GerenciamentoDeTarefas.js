@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './styles.css';
+import './styles.css';  // Importe o arquivo CSS
 import Header from '../../components/Header';
 
 const GerenciamentoDeTarefas = () => {
@@ -42,13 +42,6 @@ const GerenciamentoDeTarefas = () => {
         fetchTasks();
     }, []);
 
-    // Função para buscar o nome do usuário com base no ID
-    const getUserNameById = (userId) => {
-        console.log("u.id usuarios", usuarios)
-        const user = usuarios.find(u => u.idUser === userId);  // Busca o usuário pelo ID
-        return user ? user.nome : 'Usuário não encontrado';  // Retorna o nome ou mensagem de erro
-    };
-
     // Função para atualizar o status da tarefa
     const handleStatusChange = async (idTask, newStatus) => {
         console.log("ID da Tarefa:", idTask);
@@ -87,7 +80,6 @@ const GerenciamentoDeTarefas = () => {
         }
     };
 
-
     // Função para excluir a tarefa
     const handleDeleteTask = async (idTask) => {
         try {
@@ -100,108 +92,67 @@ const GerenciamentoDeTarefas = () => {
         }
     };
 
+    // Filtrando as tarefas por status
+    const tasksByStatus = {
+        AFAZER: tasks.filter(task => task.status === 'AFAZER'),
+        FAZENDO: tasks.filter(task => task.status === 'FAZENDO'),
+        PRONTO: tasks.filter(task => task.status === 'PRONTO')
+    };
+
     return (
         <div>
-            <Header/>
+            <Header />
 
-            <div style={styles.gridContainer}>
-                {tasks.map((task) => (
-                    <div key={task.idTask} style={styles.taskCard}>
-                        <h3>{task.descricao}</h3>
-                        <p><strong>Setor:</strong> {task.setor}</p>
-                        <p><strong>Prioridade:</strong> {task.prioridade}</p>
-                        <p><strong>Usuário:</strong> {getUserNameById(task.idTask)}</p> {/* Exibe o nome do usuário */}
-                        <p><strong>Data de Cadastro:</strong> {new Date(task.data_cadastro).toLocaleDateString()}</p>
-                        <div>{console.log("Task ID:", task.idTask)}</div>
-                        
-                        <button
-                            onClick={() => navigate(`/editar-tarefa/${task.id}`)} // Navega para a página de edição
-                            style={styles.updateButton}
-                        >
-                            Editar
-                        </button>
-                        <button
-                            onClick={() => handleDeleteTask(task.idTask)} // Exclui a tarefa
-                            style={styles.deleteButton}
-                        >
-                            Excluir
-                        </button>
-                        {/* Status editável */}
-                        <div style={styles.statusContainer}>
-                            <label><strong>Status:</strong></label>
-                            <select
-                                value={task.status} // Exibe o status atual da tarefa
-                                onChange={(e) => {
-                                    const newStatus = e.target.value;
-                                    setTasks(prevTasks =>
-                                        prevTasks.map(t =>
-                                            t.id === task.id ? { ...t, status: newStatus } : t
-                                        )
-                                    );
-                                }}
-                                style={styles.statusDropdown}
-                            >
-                                {statusOptions.map(option => (
-                                    <option key={option.value} value={option.value}>
-                                        {option.label}
-                                    </option>
-                                ))}
-                            </select>
-
-                            <button
-                                onClick={() => handleStatusChange(task.idTask, task.status)} // Usa o status da tarefa
-                                style={styles.updateButton}
-                            >
-                                Alterar status
-                            </button>
+            <div className="task-columns-container">
+                <div className="task-column">
+                    <h3>A Fazer</h3>
+                    {tasksByStatus.AFAZER.map(task => (
+                        <div key={task.idTask} className="taskCard">
+                            <h4>{task.descricao}</h4>
+                            <p><strong>Setor:</strong> {task.setor}</p>
+                            <p><strong>Prioridade:</strong> {task.prioridade}</p>
+                            <p><strong>Usuário:</strong> {task.nomeResponsavel}</p> {/* Exibe o nome do usuário */}
+                            <p><strong>Data de Cadastro:</strong> {new Date(task.data_cadastro).toLocaleDateString()}</p>
+                            <button onClick={() => navigate(`/editar-tarefa/${task.idTask}`)}>Editar</button>
+                            <button onClick={() => handleDeleteTask(task.idTask)}>Excluir</button>
+                            <button onClick={() => handleStatusChange(task.idTask, 'FAZENDO')}>Mover para Fazendo</button>
                         </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
+
+                <div className="task-column">
+                    <h3>Fazendo</h3>
+                    {tasksByStatus.FAZENDO.map(task => (
+                        <div key={task.idTask} className="taskCard">
+                            <h4>{task.descricao}</h4>
+                            <p><strong>Setor:</strong> {task.setor}</p>
+                            <p><strong>Prioridade:</strong> {task.prioridade}</p>
+                            <p><strong>Usuário:</strong> {task.nomeResponsavel}</p> {/* Exibe o nome do usuário */}
+                            <p><strong>Data de Cadastro:</strong> {new Date(task.data_cadastro).toLocaleDateString()}</p>
+                            <button onClick={() => navigate(`/editar-tarefa/${task.idTask}`)}>Editar</button>
+                            <button onClick={() => handleDeleteTask(task.idTask)}>Excluir</button>
+                            <button onClick={() => handleStatusChange(task.idTask, 'PRONTO')}>Mover para Pronto</button>
+                        </div>
+                    ))}
+                </div>
+
+                <div className="task-column">
+                    <h3>Pronto</h3>
+                    {tasksByStatus.PRONTO.map(task => (
+                        <div key={task.idTask} className="taskCard">
+                            <h4>{task.descricao}</h4>
+                            <p><strong>Setor:</strong> {task.setor}</p>
+                            <p><strong>Prioridade:</strong> {task.prioridade}</p>
+                            <p><strong>Usuário:</strong> {task.nomeResponsavel}</p> {/* Exibe o nome do usuário */}
+                            <p><strong>Data de Cadastro:</strong> {new Date(task.data_cadastro).toLocaleDateString()}</p>
+                            <button onClick={() => navigate(`/editar-tarefa/${task.idTask}`)}>Editar</button>
+                            <button onClick={() => handleDeleteTask(task.idTask)}>Excluir</button>
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
     );
 };
-
-const styles = {
-    gridContainer: {
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-        gap: '20px',
-        padding: '20px',
-    },
-    taskCard: {
-        border: '1px solid #ccc',
-        borderRadius: '8px',
-        padding: '15px',
-        boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
-        backgroundColor: '#fff',
-    },
-    statusContainer: {
-        display: 'flex',
-        alignItems: 'center',
-        marginTop: '10px',
-    },
-    statusDropdown: {
-        marginLeft: '10px',
-        marginRight: '10px',
-    },
-    updateButton: {
-        padding: '5px 10px',
-        backgroundColor: '#007bff',
-        color: '#fff',
-        border: 'none',
-        borderRadius: '4px',
-        cursor: 'pointer',
-        marginRight: '5px',
-    },
-    deleteButton: {
-        padding: '5px 10px',
-        backgroundColor: '#dc3545',
-        color: '#fff',
-        border: 'none',
-        borderRadius: '4px',
-        cursor: 'pointer',
-    }
-}
 
 export default GerenciamentoDeTarefas;

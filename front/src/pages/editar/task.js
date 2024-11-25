@@ -6,6 +6,7 @@ import Header from "../../components/Header";
 
 const TaskForm = () => {
   const { idTask } = useParams(); // Pega o ID da URL
+  console.log("ID:", idTask)
   const [task, setTask] = useState(null); // Armazena a tarefa
   const [loading, setLoading] = useState(true); // Controle de carregamento
   const navigate = useNavigate(); // Para redirecionar após a edição
@@ -20,7 +21,7 @@ const TaskForm = () => {
 
   // Carrega a lista de usuários da API quando o componente é montado
   useEffect(() => {
-    axios.get("http://127.0.0.1:8081/user")
+    axios.get("http://localhost:8081/user")
       .then(response => setUsuarios(response.data))
       .catch(error => console.error("Erro ao carregar usuários:", error));
   }, []);
@@ -29,9 +30,10 @@ const TaskForm = () => {
   useEffect(() => {
     const fetchTask = async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:8081/task/${idTask}/`);
+        const response = await axios.get(`http://127.0.0.1:8081/task/${idTask}`);
         console.log('Dados da Tarefa:', response.data); // Verifique se os dados estão sendo retornados
         const taskData = response.data;
+        console.log("Taskdata:" + taskData)
         setTask(taskData);
         // Preenche o formulário com os dados da tarefa
         setFormData({
@@ -62,11 +64,12 @@ const TaskForm = () => {
 
     const payload = {
       ...formData,
+      idUser: formData.idUser,
       prioridade: formData.prioridade.toUpperCase(),
       status: formData.status.toUpperCase(),
     };
 
-    axios.put(`http://127.0.0.1:8081/task/${idTask}/`, payload)
+    axios.put(`http://127.0.0.1:8081/task/${idTask}`, payload)
       .then(response => {
         alert("Tarefa atualizada com sucesso!");
         navigate("/gerenciar-tarefas");
@@ -92,8 +95,8 @@ const TaskForm = () => {
           <label>Usuário:</label>
           <select name="idUser" value={formData.idUser} onChange={handleChange} required>
             {usuarios.map((usuario) => (
-              <option key={usuario.idTask} value={usuario.idTask}>
-                {usuario.username}
+              <option key={usuario.idUser} value={usuario.idUser}>
+                {usuario.nome}
               </option>
             ))}
           </select>

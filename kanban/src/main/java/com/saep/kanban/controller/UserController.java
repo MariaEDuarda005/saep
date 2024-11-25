@@ -19,13 +19,11 @@ public class UserController {
     @Autowired
     private UserServiceImpl userServiceImpl;
 
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping("/teste")
     public String hello(){
         return "Hello world";
     }
 
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping("/{idUser}")
     public ResponseEntity<UserDetailsDTO> getUserById(@PathVariable Long idUser){
         try {
@@ -36,14 +34,12 @@ public class UserController {
         }
     }
 
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping
     public ResponseEntity<List<UserDetailsDTO>> getAllUser(){
         List<UserDetailsDTO> users = userServiceImpl.getAllUser();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping
     @Transactional
     public ResponseEntity<UserDetailsDTO> createUser(@RequestBody UserCreateDTO userCreateDTO, UriComponentsBuilder componentsBuilder){

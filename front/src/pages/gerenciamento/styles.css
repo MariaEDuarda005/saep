@@ -1,63 +1,100 @@
-form {
-  background-color: #f9f9f9;
-  border-radius: 8px;
+/* Container para as colunas */
+.task-columns-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
   padding: 20px;
-  max-width: 400px;
-  margin: 20px auto;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  flex-wrap: wrap;
+  /* Adicionando padding para evitar que as colunas fiquem muito apertadas */
 }
 
-h2 {
-  text-align: center;
+/* Cada coluna */
+.task-column {
+  flex: 1;
+  min-width: 350px;  /* Maior largura mínima */
+  max-width: 33%;  /* Limite de largura para três colunas */
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  padding: 20px;  /* Aumentando o padding */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;  /* Permite que a coluna tenha rolagem se necessário */
+  height: 100%;  /* Garante que as colunas se estendam por toda a altura do contêiner */
+}
+
+/* Título da coluna */
+.task-column h3 {
+  font-size: 1.5rem;
   color: #333;
-  font-size: 1.5em;
+  text-align: center;
   margin-bottom: 20px;
 }
 
-label {
-  display: block;
-  font-weight: bold;
-  color: #555;
-  margin-bottom: 8px;
-}
-
-input[type="text"],
-textarea,
-select {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
+/* Estilo para os cartões de tarefa */
+.taskCard {
+  background-color: #ffffff;
   border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 0.9em;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 20px;  /* Aumentando o padding do cartão */
+  margin-bottom: 20px;  /* Aumentando a margem inferior */
+  transition: transform 0.3s, box-shadow 0.3s;
+  min-height: 250px;  /* Aumentando a altura mínima para caber todos os botões */
+  display: flex;
+  flex-direction: column;  /* Para que os botões fiquem alinhados no final */
+  justify-content: space-between;  /* Espaçamento entre os itens dentro do cartão */
+}
+
+.taskCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.taskCard h4 {
+  font-size: 1.2rem;
   color: #333;
-  box-sizing: border-box;
+  margin-bottom: 10px;
 }
 
-textarea {
-  resize: vertical;
-  min-height: 80px;
+.taskCard p {
+  font-size: 1rem;
+  color: #555;
+  margin: 5px 0;
 }
 
+/* Botões dentro do cartão */
 button {
-  width: 100%;
-  padding: 10px;
-  background-color: #4CAF50;
-  color: #fff;
-  font-size: 1em;
-  font-weight: bold;
+  padding: 10px 20px;  /* Aumentando o padding para botões */
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
+  font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  margin-top: 10px;
+  width: 100%;  /* Garantir que os botões ocupem toda a largura disponível */
 }
 
-button:hover {
-  background-color: #45a049;
+/* Estilo para o botão "Alterar Status" */
+button.alterar-status {
+  background-color: #007bff;
+  color: white;
+}
+
+button.alterar-status:hover {
+  background-color: #0056b3;
+}
+
+/* Estilo para o botão "Excluir" */
+button.excluir {
+  background-color: #dc3545;
+  color: white;
+}
+
+button.excluir:hover {
+  background-color: #c82333;
 }
 
 button:active {
-  background-color: #3d8c42;
+  background-color: #0056b3;
 }
 
 button:focus {
@@ -65,11 +102,10 @@ button:focus {
   box-shadow: 0px 0px 5px rgba(0, 150, 0, 0.5);
 }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: blue;
+.task-column select {
+  margin-top: 10px;
+  width: 100%;  /* Largura total para o select */
   padding: 10px;
-  color: white;
+  border-radius: 6px;
+  border: 1px solid #ddd;
 }
