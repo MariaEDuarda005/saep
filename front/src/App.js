@@ -15,7 +15,7 @@ function App() {
                 <Route path="/gerenciar-tarefas" element={<GerenciamentoDeTarefas />} />
                 <Route path="/cadastrar-tarefas" element={<CadastroDeTarefas />} />
                 <Route path="/cadastro-usuarios" element={<CadastroDeUsuario />} />
-                <Route path="/editar-tarefa/:id" element={<EditarTarefa />} />
+                <Route path="/editar-tarefa/:idTask" element={<EditarTarefa />} />
                 <Route path="/" element={<Home />} />
             </Routes>
         </Router>

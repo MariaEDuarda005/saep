@@ -2,6 +2,7 @@ package com.saep.kanban.controller;
 
 import com.saep.kanban.dto.task.TaskCreateDTO;
 import com.saep.kanban.dto.task.TaskDetailsDTO;
+import com.saep.kanban.dto.task.TaskPatchDTO;
 import com.saep.kanban.dto.task.TaskUpdateDTO;
 import com.saep.kanban.repository.TaskRepository;
 import com.saep.kanban.serviceImpl.TaskServiceImpl;
@@ -81,6 +82,14 @@ public class TaskController {
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PatchMapping("/{idTask}")
+    @Transactional
+    public ResponseEntity<TaskDetailsDTO> patchTask(@PathVariable Long idTask, @RequestBody TaskPatchDTO patchDTO){
+        var patchTask = taskServiceImpl.patchTask(idTask, patchDTO);
+        return ResponseEntity.ok(patchTask);
+    }
+
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    @PutMapping("/{idTask}")
     @Transactional
     public ResponseEntity<TaskDetailsDTO> updateTask(@PathVariable Long idTask, @RequestBody TaskUpdateDTO updateDTO){
         var updateTask = taskServiceImpl.updateTask(idTask, updateDTO);

@@ -5,13 +5,13 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Header from "../../components/Header";
 
 const TaskForm = () => {
-  const { id } = useParams(); // Pega o ID da URL
+  const { idTask } = useParams(); // Pega o ID da URL
   const [task, setTask] = useState(null); // Armazena a tarefa
   const [loading, setLoading] = useState(true); // Controle de carregamento
   const navigate = useNavigate(); // Para redirecionar após a edição
   const [usuarios, setUsuarios] = useState([]); // Lista de usuários
   const [formData, setFormData] = useState({
-    usuario: "",
+    idUser: "",
     descricao: "",
     setor: "",
     prioridade: "baixa",
@@ -20,7 +20,7 @@ const TaskForm = () => {
 
   // Carrega a lista de usuários da API quando o componente é montado
   useEffect(() => {
-    axios.get("http://localhost:8000/api/users/")
+    axios.get("http://127.0.0.1:8081/user")
       .then(response => setUsuarios(response.data))
       .catch(error => console.error("Erro ao carregar usuários:", error));
   }, []);
@@ -29,13 +29,13 @@ const TaskForm = () => {
   useEffect(() => {
     const fetchTask = async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:8000/api/tasks/${id}/`);
+        const response = await axios.get(`http://127.0.0.1:8081/task/${idTask}/`);
         console.log('Dados da Tarefa:', response.data); // Verifique se os dados estão sendo retornados
         const taskData = response.data;
         setTask(taskData);
         // Preenche o formulário com os dados da tarefa
         setFormData({
-          usuario: taskData.usuario || "",
+          idUser: taskData.idUser || "",
           descricao: taskData.descricao || "",
           setor: taskData.setor || "",
           prioridade: taskData.prioridade || "baixa",
@@ -49,7 +49,7 @@ const TaskForm = () => {
     };
 
     fetchTask();
-  }, [id]);
+  }, [idTask]);
 
   // Função para lidar com mudanças nos campos do formulário
   const handleChange = (e) => {
@@ -57,15 +57,19 @@ const TaskForm = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  // Função para enviar os dados atualizados para a API
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Dados enviados:", formData);
 
-    axios.put(`http://localhost:8000/api/tasks/${id}/`, formData)
+    const payload = {
+      ...formData,
+      prioridade: formData.prioridade.toUpperCase(),
+      status: formData.status.toUpperCase(),
+    };
+
+    axios.put(`http://127.0.0.1:8081/task/${idTask}/`, payload)
       .then(response => {
         alert("Tarefa atualizada com sucesso!");
-        navigate("/gerenciar-tarefas"); // Redireciona para a página de gerenciamento de tarefas
+        navigate("/gerenciar-tarefas");
       })
       .catch(error => {
         console.error("Erro ao atualizar a tarefa:", error);
@@ -86,9 +90,9 @@ const TaskForm = () => {
       <form onSubmit={handleSubmit}>
         <div>
           <label>Usuário:</label>
-          <select name="usuario" value={formData.usuario} onChange={handleChange} required>
+          <select name="idUser" value={formData.idUser} onChange={handleChange} required>
             {usuarios.map((usuario) => (
-              <option key={usuario.id} value={usuario.id}>
+              <option key={usuario.idTask} value={usuario.idTask}>
                 {usuario.username}
               </option>
             ))}
@@ -121,17 +125,17 @@ const TaskForm = () => {
             onChange={handleChange}
             required
           >
-            <option value="baixa">Baixa</option>
-            <option value="media">Média</option>
-            <option value="alta">Alta</option>
+            <option value="BAIXA">Baixa</option>
+            <option value="MEDIA">Média</option>
+            <option value="ALTA">Alta</option>
           </select>
         </div>
         <div>
           <label>Status:</label>
           <select name="status" value={formData.status} onChange={handleChange} required>
-            <option value="a_fazer">A Fazer</option>
-            <option value="fazendo">Fazendo</option>
-            <option value="pronto">Pronto</option>
+            <option value="AFAZER">A Fazer</option>
+            <option value="FAZENDO">Fazendo</option>
+            <option value="PRONTO">Pronto</option>
           </select>
         </div>
         <button type="submit">Salvar Alterações</button>

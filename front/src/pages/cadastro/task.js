@@ -80,17 +80,17 @@ const TaskForm = () => {
         <div>
           <label>Prioridade:</label>
           <select name="prioridade" value={formData.prioridade} onChange={handleChange} required>
-            <option value="baixa">Baixa</option>
-            <option value="media">Média</option>
-            <option value="alta">Alta</option>
+            <option value="BAIXA">Baixa</option>
+            <option value="MEDIA">Média</option>
+            <option value="ALTA">Alta</option>
           </select>
         </div>
         <div>
           <label>Status:</label>
           <select name="status" value={formData.status} onChange={handleChange} required>
-            <option value="a_fazer">A Fazer</option>
-            <option value="fazendo">Fazendo</option>
-            <option value="pronto">Pronto</option>
+            <option value="AFAZER">A Fazer</option>
+            <option value="FAZENDO">Fazendo</option>
+            <option value="PRONTO">Pronto</option>
           </select>
         </div>
         <button type="submit">Cadastrar Tarefa</button>

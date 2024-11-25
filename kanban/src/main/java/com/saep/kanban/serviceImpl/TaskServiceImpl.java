@@ -2,6 +2,7 @@ package com.saep.kanban.serviceImpl;
 
 import com.saep.kanban.dto.task.TaskCreateDTO;
 import com.saep.kanban.dto.task.TaskDetailsDTO;
+import com.saep.kanban.dto.task.TaskPatchDTO;
 import com.saep.kanban.dto.task.TaskUpdateDTO;
 import com.saep.kanban.enums.Prioridade;
 import com.saep.kanban.enums.Status;
@@ -122,15 +123,49 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskDetailsDTO updateTask(Long idTask, TaskUpdateDTO taskUpdateDTO) {
+    public TaskDetailsDTO patchTask(Long idTask, TaskPatchDTO taskPatchDTO) {
         Task task = taskRepository.findById(idTask)
                 .orElseThrow(() -> new NotFoundException("Task id não encontrado"));
 
-        if (taskUpdateDTO.status() != null){
-            task.setStatus(taskUpdateDTO.status());
+        if (taskPatchDTO.status() != null){
+            task.setStatus(taskPatchDTO.status());
         }
 
         taskRepository.save(task);
+        return new TaskDetailsDTO(task);
+    }
+
+    @Override
+    public TaskDetailsDTO updateTask(Long idTask, TaskUpdateDTO taskUpdateDTO) {
+        Task task = taskRepository.findById(idTask).orElseThrow(
+                () -> new NotFoundException("Task id não encontrado")
+        );
+
+        // Atualizar os campos da tarefa com os dados do DTO
+        if (taskUpdateDTO.descricao() != null) {
+            task.setDescricao(taskUpdateDTO.descricao());
+        }
+        if (taskUpdateDTO.setor() != null) {
+            task.setSetor(taskUpdateDTO.setor());
+        }
+        if (taskUpdateDTO.prioridade() != null) {
+            task.setPrioridade(taskUpdateDTO.prioridade());
+        }
+        if (taskUpdateDTO.status() != null) {
+            task.setStatus(taskUpdateDTO.status());
+        }
+
+        if (taskUpdateDTO.idUser() != null) {
+            User user = userRepository.findById(taskUpdateDTO.idUser()).orElseThrow(
+                    () -> new NotFoundException("User id não encontrado")
+            );
+            task.setUser(user);
+        }
+
+        // Salvar a tarefa atualizada no banco
+        task = taskRepository.save(task);
+
+        // Retornar os detalhes da tarefa atualizada
         return new TaskDetailsDTO(task);
     }
 

@@ -2,6 +2,7 @@ package com.saep.kanban.service;
 
 import com.saep.kanban.dto.task.TaskCreateDTO;
 import com.saep.kanban.dto.task.TaskDetailsDTO;
+import com.saep.kanban.dto.task.TaskPatchDTO;
 import com.saep.kanban.dto.task.TaskUpdateDTO;
 
 import java.util.List;
@@ -12,6 +13,7 @@ public interface TaskService {
     TaskDetailsDTO createUser(TaskCreateDTO data);
     List<TaskDetailsDTO> getByStatus(String status);
     List<TaskDetailsDTO> getByPrioridade(String prioridade);
+    TaskDetailsDTO patchTask(Long idTask, TaskPatchDTO taskPatchDTO);
     TaskDetailsDTO updateTask(Long idTask, TaskUpdateDTO taskUpdateDTO);
     void deleteTask(Long idTask);
 }
