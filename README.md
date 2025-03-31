@@ -27,7 +27,7 @@ O SAEP implementa um sistema Kanban para gerenciamento de tarefas, onde é poss�
 ### Backend (Spring Boot)
 1. Clone o repositório:
    ```bash
-   git clone [https://github.com/usuario/saep.git](https://github.com/MariaEDuarda005/saep)
+   git clone https://github.com/MariaEDuarda005/saep
    ```
 
 2. Vá para a pasta do backend:
