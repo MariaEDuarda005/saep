@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './styles.css'
 import Header from '../../components/Header';
-
+import config from "../../config";
 
 function Home() {
   const [nome, setNome] = useState('');
@@ -13,7 +13,8 @@ function Home() {
     event.preventDefault();
     try {
       console.log("passei aqui")
-      const response = await axios.post('http://127.0.0.1:8081/user', { 
+      //const response = await axios.post(`http://localhost:8081/user`, { 
+      const response = await axios.post(`${config.apiUrl}/user`, { 
         nome,
         email,
       });
@@ -28,45 +29,41 @@ function Home() {
   };
 
   return (
-    <div className='containner'>
+    <div className='container'>
       <Header/>
       <main>
         <h2>Cadastro de Usuários</h2>
-        <form className="formulario"
-        onSubmit={handleSubmit}>
-          <div className='teste' style={{ display: 'flex', alignItems: 'center', marginBottom: '25px', marginTop: '25px' }}>
-            <label htmlFor="nome" style={{ flex: '1', marginRight: '10px' }}>Nome:</label>
+        <form className="formulario" onSubmit={handleSubmit}>
+          <div className='input-group'>
+            <label htmlFor="nome">Nome:</label>
             <input
               type="text"
               id="nome"
               value={nome}
               onChange={(e) => setNome(e.target.value)}
               required
-              style={{ flex: '2', height: '10px', padding: 15, borderRadius: '7px' }}
             />
           </div>
-          <div className='teste' style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-            <label htmlFor="email" style={{ flex: '1', marginRight: '10px' }}>Email:</label>
+          <div className='input-group'>
+            <label htmlFor="email">Email:</label>
             <input
               type="email"
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              style={{ flex: '2', height: '5px', padding: 12, borderRadius: '7px' }}
             />
           </div>
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <div className='button-container'>
             <button type="submit" className="botao-cadastrar">Cadastrar</button>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <p style={{ color: 'green' }}>{msn}</p>
+          <div className='message-container'>
+            <p className='mensagem'>{msn}</p>
           </div>
         </form>
       </main>
     </div>
   );
 }
-
 
 export default Home;

@@ -76,6 +76,7 @@ public class TaskController {
         return ResponseEntity.created(uri).body(task);
     }
 
+    // Altera apenas o status
     @PatchMapping("/{idTask}")
     @Transactional
     public ResponseEntity<TaskDetailsDTO> patchTask(@PathVariable Long idTask, @RequestBody TaskPatchDTO patchDTO){

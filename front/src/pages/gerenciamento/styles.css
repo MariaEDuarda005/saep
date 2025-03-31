@@ -1,27 +1,23 @@
-/* Container para as colunas */
 .task-columns-container {
   display: flex;
   justify-content: space-between;
   gap: 20px;
   padding: 20px;
   flex-wrap: wrap;
-  /* Adicionando padding para evitar que as colunas fiquem muito apertadas */
 }
 
-/* Cada coluna */
 .task-column {
   flex: 1;
-  min-width: 350px;  /* Maior largura mínima */
-  max-width: 33%;  /* Limite de largura para três colunas */
+  min-width: 350px;  
+  max-width: 33%; 
   background-color: #f9f9f9;
   border-radius: 10px;
-  padding: 20px;  /* Aumentando o padding */
+  padding: 20px;  
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  overflow-y: auto;  /* Permite que a coluna tenha rolagem se necessário */
-  height: 100%;  /* Garante que as colunas se estendam por toda a altura do contêiner */
+  overflow-y: auto;  
+  height: 100%;  
 }
 
-/* Título da coluna */
 .task-column h3 {
   font-size: 1.5rem;
   color: #333;
@@ -29,19 +25,18 @@
   margin-bottom: 20px;
 }
 
-/* Estilo para os cartões de tarefa */
 .taskCard {
   background-color: #ffffff;
   border: 1px solid #ddd;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  padding: 20px;  /* Aumentando o padding do cartão */
-  margin-bottom: 20px;  /* Aumentando a margem inferior */
+  padding: 20px; 
+  margin-bottom: 20px; 
   transition: transform 0.3s, box-shadow 0.3s;
-  min-height: 250px;  /* Aumentando a altura mínima para caber todos os botões */
+  min-height: 250px; 
   display: flex;
-  flex-direction: column;  /* Para que os botões fiquem alinhados no final */
-  justify-content: space-between;  /* Espaçamento entre os itens dentro do cartão */
+  flex-direction: column; 
+  justify-content: space-between;  
 }
 
 .taskCard:hover {
@@ -61,19 +56,17 @@
   margin: 5px 0;
 }
 
-/* Botões dentro do cartão */
 button {
-  padding: 10px 20px;  /* Aumentando o padding para botões */
+  padding: 10px 20px;  
   border: none;
   border-radius: 6px;
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
   margin-top: 10px;
-  width: 100%;  /* Garantir que os botões ocupem toda a largura disponível */
+  width: 100%;  
 }
 
-/* Estilo para o botão "Alterar Status" */
 button.alterar-status {
   background-color: #007bff;
   color: white;
@@ -83,7 +76,6 @@ button.alterar-status:hover {
   background-color: #0056b3;
 }
 
-/* Estilo para o botão "Excluir" */
 button.excluir {
   background-color: #dc3545;
   color: white;

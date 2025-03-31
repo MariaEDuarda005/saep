@@ -1,0 +1,95 @@
+stages:
+  - stage: checkStage
+    displayName: Check Stage
+    jobs:
+      - job: checkJob
+        continueOnError: false
+        displayName: Check Variables
+        steps:
+          # Get Build Variables
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              script: |
+                if [ "$(Build.Reason)" == "PullRequest" ]; then
+                  echo 'It is a Pull Request ⚠️'
+                  echo ''
+                  echo 'Build Reason: $(Build.Reason)'
+                  echo 'Pull Request ID: $(System.PullRequest.PullRequestId)'
+                  echo 'Target Branch: $(System.PullRequest.TargetBranch)'
+                  echo 'Source Branch: $(System.PullRequest.SourceBranch)'
+                else
+                  echo 'Build Reason: $(Build.Reason)'
+                  echo 'Source Branch: $(Build.SourceBranch)'
+                  echo 'Source Branch Name: $(Build.SourceBranchName)'
+                fi
+            displayName: Check Variables
+
+  - stage: buildStage
+    displayName: Build and Push
+    condition: succeeded('checkStage')
+    jobs:
+      - job: buildJob
+        continueOnError: false
+        displayName: Build
+        steps:
+          # Build Docker Image
+          - task: Docker@2
+            displayName: Build Docker Image
+            inputs:
+              command: build
+              repository: $(docker-image-name-repository)
+              dockerfile: $(docker-dockerfile-path)
+              containerRegistry: $(docker-registry-service-connection)
+              tags: $(docker-tag)
+              buildContext: $(docker-build-context)
+
+          # Push Docker Image
+          - task: Docker@2
+            displayName: Push Docker Image
+            inputs:
+              command: push
+              repository: $(docker-image-name-repository)
+              containerRegistry: $(docker-registry-service-connection)
+              tags: $(docker-tag)
+
+  - stage: deploySate
+    condition: succeeded('buildStage')
+    displayName: Deploy
+    jobs:
+      - job: deployJob
+        continueOnError: false
+        displayName: Deploy
+        steps:
+          # Deploy to Azure WebApp
+          - task: AzureWebAppContainer@1
+            inputs:
+              azureSubscription: $(azure-subscription)
+              appName: $(azure-web-app-name)
+              containers: $(azure-container-registry)/$(docker-image-name-repository):$(docker-tag)
+
+          # Update Web App
+          - task: AzureCLI@2
+            displayName: Update Web App
+            name: updateWebApp
+            inputs:
+              azureSubscription: $(azure-subscription)
+              scriptType: "pscore"
+              scriptLocation: "inlineScript"
+              inlineScript: |
+                az webapp config container set --name $(azure-web-app-name) --resource-group $(azure-resource-group) --container-image-name $(azure-container-registry)/$(docker-image-name-repository):$(docker-tag) --container-registry-url https://$(azure-container-registry)
+
+          # Verify Web App Update Status
+          - task: AzureCLI@2
+            displayName: Verify Update Status
+            inputs:
+              azureSubscription: $(azure-subscription)
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              inlineScript: |
+                STATUS=$(az webapp show --name $(azure-web-app-name) --resource-group $(azure-resource-group) --query "state" -o tsv)
+                if [[ "$STATUS" != "Running" ]]; then
+                  echo "⚠️ Update failed. Web App is not running." && exit 1
+                else
+                  echo "✅ Web App updated and running successfully."
+                fi

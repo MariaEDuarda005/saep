@@ -1,0 +1,12 @@
+trigger:
+  - main
+
+pool:
+  vmImage: ubuntu-22.04
+
+variables:
+  - group: maria-dev-backend-credentials
+  - template: templates/vars.yml
+
+stages:
+  - template: templates/stages.yml

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './styles.css';  // Importe o arquivo CSS
 import Header from '../../components/Header';
+import config from "../../config";
 
 const GerenciamentoDeTarefas = () => {
     const navigate = useNavigate();
@@ -17,7 +18,7 @@ const GerenciamentoDeTarefas = () => {
     // Função para buscar os usuários
     const fetchUsuarios = async () => {
         try {
-            const response = await axios.get('http://localhost:8081/user');
+            const response = await axios.get(`${config.apiUrl}/user`);
             console.log("Dados retornados da API Usuario:", response.data);
             setUsuarios(response.data);  // Armazena os usuários na variável de estado
         } catch (error) {
@@ -28,7 +29,7 @@ const GerenciamentoDeTarefas = () => {
     // Função para buscar as tarefas
     const fetchTasks = async () => {
         try {
-            const response = await axios.get('http://127.0.0.1:8081/task');
+            const response = await axios.get(`${config.apiUrl}/task`);
             console.log("Dados retornados da API tasks:", response.data);
             setTasks(response.data);
         } catch (error) {
@@ -64,7 +65,7 @@ const GerenciamentoDeTarefas = () => {
 
             console.log("Atualizando tarefa:", updatedTask);
 
-            await axios.patch(`http://127.0.0.1:8081/task/${idTask}`, updatedTask);
+            await axios.patch(`${config.apiUrl}/task/${idTask}`, updatedTask);
 
             // Atualiza a lista localmente
             setTasks(prevTasks =>
@@ -83,7 +84,7 @@ const GerenciamentoDeTarefas = () => {
     // Função para excluir a tarefa
     const handleDeleteTask = async (idTask) => {
         try {
-            await axios.delete(`http://127.0.0.1:8081/task/deletar/${idTask}`);
+            await axios.delete(`${config.apiUrl}/task/deletar/${idTask}`);
             setTasks(prevTasks => prevTasks.filter(task => task.idTask !== idTask));
             alert("Tarefa excluída com sucesso!");
         } catch (error) {
@@ -127,7 +128,7 @@ const GerenciamentoDeTarefas = () => {
                             <h4>{task.descricao}</h4>
                             <p><strong>Setor:</strong> {task.setor}</p>
                             <p><strong>Prioridade:</strong> {task.prioridade}</p>
-                            <p><strong>Usuário:</strong> {task.nomeResponsavel}</p> {/* Exibe o nome do usuário */}
+                            <p><strong>Usuário:</strong> {task.nomeResponsavel}</p> 
                             <p><strong>Data de Cadastro:</strong> {new Date(task.data_cadastro).toLocaleDateString()}</p>
                             <button onClick={() => navigate(`/editar-tarefa/${task.idTask}`)}>Editar</button>
                             <button onClick={() => handleDeleteTask(task.idTask)}>Excluir</button>

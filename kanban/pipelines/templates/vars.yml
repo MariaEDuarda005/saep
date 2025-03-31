@@ -1,0 +1,28 @@
+variables:
+  # container connections
+  - name: docker-registry-service-connection
+    value: "$(DOCKER_REGISTRY_CONNECTION)"
+  - name: docker-image-name-repository
+    value: "$(DOCKER_IMAGE_NAME_REPOSITORY)"
+
+  # container infos
+  - name: docker-dockerfile-path
+    value: '$(Build.SourcesDirectory)/Dockerfile'
+  - name: docker-tag
+    value: '$(Build.BuildId)'
+  - name: docker-build-context
+    value: '$(Build.SourcesDirectory)'
+  - name: docker-build-arguments
+    value: "$(DOCKER_BUILD_ARGS)"
+
+  # subscription connections
+  - name: azure-subscription
+    value: "$(AZURE_SUBSCRIPTION)"
+  - name: azure-resource-group
+    value: "$(AZURE_RESOURCE_GROUP)"
+
+  # container registry
+  - name: azure-container-registry
+    value: "$(AZURE_CONTAINER_REGISTRY)"
+  - name: azure-web-app-name
+    value: "$(AZURE_WEB_APP_NAME)"

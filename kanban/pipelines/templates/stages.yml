@@ -1,0 +1,71 @@
+stages:
+  - stage: checkStage
+    displayName: Check Stage
+    jobs:
+      - job: checkJob
+        continueOnError: false
+        displayName: Check Variables
+        steps:
+          # Get Build Variables
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              script: |
+                if [ "$(Build.Reason)" == "PullRequest" ]; then
+                  echo '⚠️ It is a Pull Request ⚠️'
+                  echo '⚠️ Only this step and compile will be executed ⚠️'
+                  echo ''
+                  echo 'Build Reason: $(Build.Reason)'
+                  echo 'Pull Request ID: $(System.PullRequest.PullRequestId)'
+                  echo 'Target Branch: $(System.PullRequest.TargetBranch)'
+                  echo 'Source Branch: $(System.PullRequest.SourceBranch)'
+                else
+                  echo 'Build Reason: $(Build.Reason)'
+                  echo 'Source Branch: $(Build.SourceBranch)'
+                  echo 'Source Branch Name: $(Build.SourceBranchName)'
+                fi
+            displayName: 'Check Variables'
+
+  - stage: buildStage
+    displayName: Build Stage
+    condition: succeeded('checkStage')
+    jobs:
+      - job: buildJob
+        continueOnError: false
+        displayName: Build
+        steps:
+          # Build Docker Image
+          - task: Docker@2
+            displayName: 'Build Docker Image'
+            inputs:
+              command: build
+              repository: $(docker-image-name-repository)
+              dockerfile: $(docker-dockerfile-path)
+              containerRegistry: $(docker-registry-service-connection)
+              tags: $(docker-tag)
+              buildContext: $(docker-build-context)
+              arguments: $(docker-build-arguments)
+
+          # Push Docker Image
+          - task: Docker@2
+            displayName: 'Push Docker Image'
+            inputs:
+              command: push
+              repository: $(docker-image-name-repository)
+              containerRegistry: $(docker-registry-service-connection)
+              tags: $(docker-tag)
+
+  - stage: deployStage
+    displayName: Deploy Stage
+    condition: succeeded('buildStage')
+    jobs:
+      - job: Deploy
+        continueOnError: false
+        displayName: Deploy
+        steps:
+          # Deploy to Azure WebApp
+          - task: AzureWebAppContainer@1
+            inputs:
+              azureSubscription: $(azure-subscription)
+              appName: $(azure-web-app-name)
+              containers: $(azure-container-registry)/$(docker-image-name-repository):$(docker-tag)

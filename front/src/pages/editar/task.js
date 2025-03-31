@@ -3,14 +3,16 @@ import './styles.css';
 import axios from "axios";
 import { useParams, useNavigate } from 'react-router-dom';
 import Header from "../../components/Header";
+import config from "../../config";
 
 const TaskForm = () => {
-  const { idTask } = useParams(); // Pega o ID da URL
-  console.log("ID:", idTask)
-  const [task, setTask] = useState(null); // Armazena a tarefa
-  const [loading, setLoading] = useState(true); // Controle de carregamento
-  const navigate = useNavigate(); // Para redirecionar após a edição
-  const [usuarios, setUsuarios] = useState([]); // Lista de usuários
+
+  const navigate = useNavigate(); 
+
+  const { idTask } = useParams(); 
+  const [task, setTask] = useState(null); 
+  const [loading, setLoading] = useState(true); 
+  const [usuarios, setUsuarios] = useState([]); 
   const [formData, setFormData] = useState({
     idUser: "",
     descricao: "",
@@ -21,7 +23,7 @@ const TaskForm = () => {
 
   // Carrega a lista de usuários da API quando o componente é montado
   useEffect(() => {
-    axios.get("http://localhost:8081/user")
+    axios.get(`${config.apiUrl}/user`)
       .then(response => setUsuarios(response.data))
       .catch(error => console.error("Erro ao carregar usuários:", error));
   }, []);
@@ -30,26 +32,30 @@ const TaskForm = () => {
   useEffect(() => {
     const fetchTask = async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:8081/task/${idTask}`);
+        const response = await axios.get(`${config.apiUrl}/task/${idTask}`);
         console.log('Dados da Tarefa:', response.data); // Verifique se os dados estão sendo retornados
         const taskData = response.data;
-        console.log("Taskdata:" + taskData)
+  
+        console.log("Taskdata:", taskData);
+  
         setTask(taskData);
-        // Preenche o formulário com os dados da tarefa
+  
+        // Verifica se há idUser antes de atribuir
         setFormData({
-          idUser: taskData.idUser || "",
+          idUser: taskData.idUser || "",  // Caso tenha idUser, atribui esse valor
           descricao: taskData.descricao || "",
           setor: taskData.setor || "",
           prioridade: taskData.prioridade || "baixa",
           status: taskData.status || "a_fazer",
         });
+        
         setLoading(false);
       } catch (error) {
         console.error('Erro ao carregar a tarefa:', error);
         setLoading(false); // Finaliza o carregamento
       }
     };
-
+  
     fetchTask();
   }, [idTask]);
 
@@ -69,7 +75,7 @@ const TaskForm = () => {
       status: formData.status.toUpperCase(),
     };
 
-    axios.put(`http://127.0.0.1:8081/task/${idTask}`, payload)
+    axios.put(`${config.apiUrl}/task/${idTask}`, payload)
       .then(response => {
         alert("Tarefa atualizada com sucesso!");
         navigate("/gerenciar-tarefas");
@@ -86,14 +92,14 @@ const TaskForm = () => {
   }
 
   return (
-    <div>
-      <Header/>
-
+    <div className="task-container">
+      <Header />
       <h2>Editar Tarefa</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
+      <form onSubmit={handleSubmit} className="task-form">
+        <div className="input-group">
           <label>Usuário:</label>
           <select name="idUser" value={formData.idUser} onChange={handleChange} required>
+          <option value="">Selecione um usuário</option>
             {usuarios.map((usuario) => (
               <option key={usuario.idUser} value={usuario.idUser}>
                 {usuario.nome}
@@ -101,39 +107,27 @@ const TaskForm = () => {
             ))}
           </select>
         </div>
-        <div>
+
+        <div className="input-group">
           <label>Descrição da Tarefa:</label>
-          <textarea
-            name="descricao"
-            value={formData.descricao}
-            onChange={handleChange}
-            required
-          />
+          <textarea name="descricao" value={formData.descricao} onChange={handleChange} required />
         </div>
-        <div>
+
+        <div className="input-group">
           <label>Setor:</label>
-          <input
-            type="text"
-            name="setor"
-            value={formData.setor}
-            onChange={handleChange}
-            required
-          />
+          <input type="text" name="setor" value={formData.setor} onChange={handleChange} required />
         </div>
-        <div>
+
+        <div className="input-group">
           <label>Prioridade:</label>
-          <select
-            name="prioridade"
-            value={formData.prioridade}
-            onChange={handleChange}
-            required
-          >
+          <select name="prioridade" value={formData.prioridade} onChange={handleChange} required>
             <option value="BAIXA">Baixa</option>
             <option value="MEDIA">Média</option>
             <option value="ALTA">Alta</option>
           </select>
         </div>
-        <div>
+
+        <div className="input-group">
           <label>Status:</label>
           <select name="status" value={formData.status} onChange={handleChange} required>
             <option value="AFAZER">A Fazer</option>
@@ -141,6 +135,7 @@ const TaskForm = () => {
             <option value="PRONTO">Pronto</option>
           </select>
         </div>
+
         <button type="submit">Salvar Alterações</button>
       </form>
     </div>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import './styles.css';
 import axios from "axios";
 import Header from "../../components/Header";
+import config from "../../config";
 
 const TaskForm = () => {
   const [usuarios, setUsuarios] = useState([]);
@@ -15,7 +16,7 @@ const TaskForm = () => {
 
   // Carrega a lista de usuários da API quando o componente é montado
   useEffect(() => {
-    axios.get("http://localhost:8081/user")  // Ajuste para o endpoint correto do backend
+    axios.get(`${config.apiUrl}/user`)  // Ajuste para o endpoint correto do backend
       .then(response => setUsuarios(response.data))
       .catch(error => console.error("Erro ao carregar usuários:", error));
   }, []);
@@ -34,7 +35,7 @@ const TaskForm = () => {
     console.log("Dados enviados:", formData);
 
     // Ajusta para enviar os dados para o backend
-    axios.post("http://localhost:8081/task/cadastrar", {
+    axios.post(`${config.apiUrl}/task/cadastrar`, {
       descricao: formData.descricao,
       setor: formData.setor,
       prioridade: formData.prioridade.toUpperCase(), 
